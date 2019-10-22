@@ -1,6 +1,6 @@
 # HYY Voting API (Rails / Grape)
 
-API backend for the HYY Voting Service.
+API backend for the HYY Voting Service. Has been modified for KY's use by Ohto Pentikäinen and Saku Virtanen
 
 Has [Voting-frontend](https://github.com/hyy-vaalit/voting-frontend) included as a git submodule
 in public/ folder.
