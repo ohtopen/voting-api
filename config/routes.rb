@@ -10,14 +10,12 @@ Rails.application.routes.draw do
   # Grape API in app/api/
   mount API => '/'
 
+  get 'auth/consume', to:'haka/auth#consume'
+    post 'auth/consume', to:'haka/auth#consume'
+
   # SAML Authentication from the Haka federation
   namespace :haka do
     get 'auth/new'
-  end
-
-  namespace :auth do
-    get 'consume'
-    post 'consume'
   end
 
 end
