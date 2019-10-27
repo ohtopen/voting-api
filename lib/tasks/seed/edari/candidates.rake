@@ -1,4 +1,4 @@
-
+require './lib/support/imported_csv_candidate'
 
 namespace :db do
   namespace :seed do
