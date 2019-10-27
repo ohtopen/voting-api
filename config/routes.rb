@@ -13,8 +13,11 @@ Rails.application.routes.draw do
   # SAML Authentication from the Haka federation
   namespace :haka do
     get 'auth/new'
-    get 'auth/consume'
-    post 'auth/consume'
+  end
+
+  namespace :auth do
+    get 'consume'
+    post 'consume'
   end
 
 end
