@@ -1,33 +1,44 @@
-require './lib/support/imported_csv_candidate'
+
 
 namespace :db do
   namespace :seed do
     namespace :edari do
-      namespace :demo do
 
-        desc 'demo candidates from 2019 elections (requires alliances)'
-        task :candidates => :environment do
-          Rails.logger.info "Seeding candidates ..."
+      desc 'seed candidates from stdin in csv format'
+      task :candidates => :environment do
+        ActiveRecord::Base.transaction do
+          begin
 
-          filename = "./lib/support/data/2019_candidates.csv"
+            if Candidate.count != 0
+              raise "Expected Candidate table to be empty (has #{Candidate.count} candidates)."
+            end
 
-          Rails.logger.info "BEGIN: Database has now #{Candidate.count} candidates."
+            separator = ","
+            encoding = "UTF-8"
+            count = 0
 
-          separator = ","
-          encoding = "UTF-8"
-          count = 0
+            Rails.logger.info "SEEDING CANDIDATES"
+            puts ""
+            puts "==================== CANDIDATES ======================="
+            puts "Paste Candidates in CSV format, finally press ^D"
+            puts "Expected format is (without header):"
+            puts "name,numbering_order,short_name,candidate_count"
+            puts ""
 
-          CSV.foreach(filename,
-                        col_sep: separator,
-                        encoding: encoding,
-                        headers: true) do |csv_candidate|
+            lines = $stdin.readlines
 
-            count = count + 1
-            ImportedCsvCandidate.create_from! csv_candidate
+            lines.each do |csv_row|
+              count = count + 1
+
+              CSV.parse(csv_row, col_sep: separator, encoding: encoding) do |csv_candidate|
+                ImportedCsvCandidate.create_from! csv_candidate
+              end
+            end
+
+            Rails.logger.info "Imported #{count} candidates from STDIN."
+            Rails.logger.info "Database has now #{Candidate.count} candidates."
+
           end
-
-          Rails.logger.info "Imported #{count} candidates"
-          Rails.logger.info "END: Database has now #{Candidate.count} candidates."
         end
 
       end
